@@ -21,11 +21,16 @@ class PostWithCommentTests(TestCase):
             author=cls.user,
             text='Текст 1234',
             group=cls.group,
-            pics='media/m1000x1000.jpg'
+            # pics='media/m1000x1000.jpg',
+            image='media/m1000x1000.jpg'
         )
+        # cls.comment = Comment.objects.create(
+        #     post=cls.post,
+        #     text_comment='Самый доброжелательный комментарий',
+        # )
         cls.comment = Comment.objects.create(
             post=cls.post,
-            text_comment='Самый доброжелательный комментарий',
+            text='Самый доброжелательный комментарий',
         )
 
     def setUp(self):

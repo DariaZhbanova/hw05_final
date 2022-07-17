@@ -8,10 +8,16 @@
       <form method="post" action="{% url 'posts:add_comment' post.pk %}">
         {% csrf_token %}      
         <div class="form-group mb-2">
-          {{ form.text_comment|addclass:"form-control" }}
+          {% comment %} {{ form.text_comment|addclass:"form-control" }}
           {% if form.text_comment.help_text %}
               <small id="{{ form.text_comment.id_for_label }}-help" class="form-text text-muted">
               {{ form.text_comment.help_text|safe }}
+              </small>
+          {% endif %} {% endcomment %}
+          {{ form.text|addclass:"form-control" }}
+          {% if form.text.help_text %}
+              <small id="{{ form.text.id_for_label }}-help" class="form-text text-muted">
+              {{ form.text.help_text|safe }}
               </small>
           {% endif %}
         </div>
@@ -32,7 +38,8 @@
               </a>
             </h5>
               <p>
-              {{ comment.text_comment }}
+              {% comment %} {{ comment.text_comment }} {% endcomment %}
+              {{ comment.text }}
             </p>
           </div>
         </div>

@@ -30,10 +30,15 @@ class CommentTest(TestCase):
         а сам комментарий отображается на индивидуальной
         странице поста."""
         comments_count = Comment.objects.count()
+        # form_data = {
+        #     'author': self.user,
+        #     'post': self.post,
+        #     'text_comment': 'Самый доброжелательный комментарий',
+        # }
         form_data = {
             'author': self.user,
             'post': self.post,
-            'text_comment': 'Самый доброжелательный комментарий',
+            'text': 'Самый доброжелательный комментарий',
         }
         response_one=self.guest_client.post(
             reverse(

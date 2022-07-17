@@ -80,6 +80,7 @@ class MediaCacheTest(TestCase):
             'text': 'Да здравствует новый текст',
             'group': MediaCacheTest.group.pk,
             'pics': uploaded,
+            'image': uploaded,
         }
         response = self.authorized_client.post(
             reverse('posts:post_create'),
@@ -94,6 +95,7 @@ class MediaCacheTest(TestCase):
         self.assertTrue(
             Post.objects.filter(
                 text='Да здравствует новый текст',
-                pics='media/small.gif',
+                # pics='media/small.gif',
+                image='posts/small.gif',
             ).exists()
         )

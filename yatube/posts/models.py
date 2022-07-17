@@ -21,9 +21,16 @@ class Post(models.Model):
         blank=True,
         null=True,
         help_text='Привлеките внимание читателей самым важным')
-    pics = models.ImageField(
+    # pics = models.ImageField(
+    #     'Картинка-волшебница',
+    #     upload_to='media/',
+    #     blank=True,
+    #     null=True,
+    #     help_text='Прикрепите картинку или фотографию',
+    #     )
+    image = models.ImageField(
         'Картинка-волшебница',
-        upload_to='media/',
+        upload_to='posts/',
         blank=True,
         null=True,
         help_text='Прикрепите картинку или фотографию',
@@ -84,7 +91,13 @@ class Comment(models.Model):
         verbose_name='Автор',
         related_name='comments',
     )
-    text_comment = models.CharField(
+    # text_comment = models.CharField(
+    #     max_length=200,
+    #     null=True,
+    #     verbose_name='Ваш комментарий',
+    #     help_text='Напишите Ваши впечатления после прочтения поста',
+    # )
+    text = models.TextField(
         max_length=200,
         null=True,
         verbose_name='Ваш комментарий',
@@ -98,8 +111,10 @@ class Comment(models.Model):
     class Meta:
         ordering = ['-created']
 
+    # def __str__(self) -> str:
+    #     return self.text_comment[:15]
     def __str__(self) -> str:
-        return self.text_comment[:15]
+        return self.text[:15]
 
 class Follow(models.Model):
     user = models.ForeignKey(

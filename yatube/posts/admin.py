@@ -22,7 +22,8 @@ class GroupAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
-        'text_comment',
+        # 'text_comment',
+        'text',
     )
 
 admin.site.register(Post, PostAdmin)

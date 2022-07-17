@@ -27,7 +27,8 @@ class PostTests(TestCase):
         self.assertEqual(post.text, post_b.text)
         self.assertEqual(post.author, post_b.author)
         self.assertEqual(post.group, post_b.group)
-        self.assertEqual(post.pics, post_b.pics)
+        # self.assertEqual(post.pics, post_b.pics)
+        self.assertEqual(post.image, post_b.image)
 
     def assertGroup(self, group, group_b):
         self.assertEqual(group.title, group_b.title)
@@ -42,7 +43,8 @@ class PostWithGroupAndPictureTests(PostTests):
             author=cls.user,
             text='Текст 1234',
             group=cls.group,
-            pics='media/m1000x1000.jpg',
+            # pics='media/m1000x1000.jpg',
+            image='posts/m1000x1000.jpg',
         )
 
     def test_index_page_show_correct_context(self):
@@ -78,7 +80,8 @@ class PostPagesTests(PostTests):
         cls.post = Post.objects.create(
             author=cls.user,
             text='Текст 1234',
-            pics='media/m1000x1000.jpg'
+            # pics='media/m1000x1000.jpg'
+            image='posts/m1000x1000.jpg'
         )
 
     def test_post_create_page_show_correct_context_form_ields(self):
