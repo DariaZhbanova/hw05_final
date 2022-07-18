@@ -24,8 +24,11 @@ class CommentTest(TestCase):
 
     def test_post_detail_page_show_correct_comment(self):
         """При добавлении комментария от
-        неавторизованного пользователя он не будет добавлен в БД.
-        При создании коммента в БД появляется +1 запись,
+        неавторизованного пользователя он не будет добавлен в БД,
+        а сам гость редиректится на страницу авторизации
+        и оттуда к комментированию поста.
+        При создании коммента от авторизованного пользователя
+        в БД появляется +1 запись,
         а сам комментарий отображается на индивидуальной
         странице поста."""
         comments_count = Comment.objects.count()
@@ -42,9 +45,12 @@ class CommentTest(TestCase):
             data=form_data,
             follow=True
         )
+        self.assertRedirects(
+            response_one,
+            f'/auth/login/?next=/posts/{self.post.pk}/comment/')
         guest_comments_count = Comment.objects.count()
+        self.assertEqual(comments_count, guest_comments_count)  # 0==0
         self.assertEqual(response_one.status_code, HTTPStatus.OK)
-        self.assertEqual(comments_count, guest_comments_count)
 
         response_two = self.authorized_client.post(
             reverse(
@@ -58,7 +64,7 @@ class CommentTest(TestCase):
             'posts:post_detail',
             kwargs={'post_id': f'{ self.post.pk }'}))
         new_comments_count = Comment.objects.count()
-        self.assertNotEqual(comments_count, new_comments_count)
+        self.assertNotEqual(comments_count, new_comments_count)  # 0!=1
 
         last_comment = Comment.objects.last()
         response_three = self.authorized_client.get(reverse(

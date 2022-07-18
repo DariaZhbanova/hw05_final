@@ -48,7 +48,10 @@ class MediaCacheTest(TestCase):
             data=form_data,
             follow=True,
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, reverse(
+            'posts:profile',
+            kwargs={'username': f'{ self.user.username }'}))
+        # self.assertEqual(response.status_code, 200)
 
         sleep(2)
         response_second = self.authorized_client.get(reverse('posts:index'))
@@ -85,9 +88,9 @@ class MediaCacheTest(TestCase):
             data=form_data,
             follow=True,
         )
-        # self.assertRedirects(response, reverse(
-        #     'posts:profile',
-        #     kwargs={'username': f'{ self.user.username }'}))
+        self.assertRedirects(response, reverse(
+            'posts:profile',
+            kwargs={'username': f'{ self.user.username }'}))
         self.assertEqual(response.status_code, 200)
         new_post_count = Post.objects.count()
         self.assertNotEqual(posts_count, new_post_count)
