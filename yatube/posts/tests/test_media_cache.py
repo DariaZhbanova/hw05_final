@@ -77,7 +77,7 @@ class MediaCacheTest(TestCase):
         form_data = {
             'text': 'Да здравствует новый текст',
             'group': MediaCacheTest.group.pk,
-            'pics': uploaded,
+            # 'pics': uploaded,
             'image': uploaded,
         }
         response = self.authorized_client.post(
