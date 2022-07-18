@@ -48,9 +48,7 @@ class MediaCacheTest(TestCase):
             data=form_data,
             follow=True,
         )
-        self.assertRedirects(response, reverse(
-            'posts:profile',
-            kwargs={'username': f'{ self.user.username }'}))
+        self.assertRedirects(response.status_code, 200)
 
         sleep(2)
         response_second = self.authorized_client.get(reverse('posts:index'))
