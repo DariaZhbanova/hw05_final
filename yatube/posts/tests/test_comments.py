@@ -22,40 +22,34 @@ class CommentTest(TestCase):
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 
-
     def test_post_detail_page_show_correct_comment(self):
         """При добавлении комментария от
-        неавторизованного пользователя он не будет добавлен в БД. 
+        неавторизованного пользователя он не будет добавлен в БД.
         При создании коммента в БД появляется +1 запись,
         а сам комментарий отображается на индивидуальной
         странице поста."""
         comments_count = Comment.objects.count()
-        # form_data = {
-        #     'author': self.user,
-        #     'post': self.post,
-        #     'text_comment': 'Самый доброжелательный комментарий',
-        # }
         form_data = {
             'author': self.user,
             'post': self.post,
             'text': 'Самый доброжелательный комментарий',
         }
-        response_one=self.guest_client.post(
+        response_one = self.guest_client.post(
             reverse(
-            'posts:add_comment',
-            kwargs={'post_id': f'{self.post.pk}'}
+                'posts:add_comment',
+                kwargs={'post_id': f'{self.post.pk}'}
             ),
             data=form_data,
             follow=True
         )
-        guest_comments_count= Comment.objects.count()
+        guest_comments_count = Comment.objects.count()
         self.assertEqual(response_one.status_code, HTTPStatus.OK)
         self.assertEqual(comments_count, guest_comments_count)
 
         response_two = self.authorized_client.post(
             reverse(
-            'posts:add_comment',
-            kwargs={'post_id': f'{self.post.pk}'}
+                'posts:add_comment',
+                kwargs={'post_id': f'{self.post.pk}'}
             ),
             data=form_data,
             follow=True

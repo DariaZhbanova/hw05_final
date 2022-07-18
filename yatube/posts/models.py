@@ -34,7 +34,7 @@ class Post(models.Model):
         blank=True,
         null=True,
         help_text='Прикрепите картинку или фотографию',
-        )
+    )
     text = models.TextField(
         'Текст поста',
         help_text='Поделитесь с общественностью важными новостями'
@@ -113,13 +113,15 @@ class Comment(models.Model):
 
     # def __str__(self) -> str:
     #     return self.text_comment[:15]
+
     def __str__(self) -> str:
         return self.text[:15]
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
         User,
-        on_delete=None,
+        on_delete=models.CASCADE,
         verbose_name='Читающий',
         related_name='follower',
     )

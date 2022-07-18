@@ -118,15 +118,20 @@ def add_comment(request, post_id):
     return redirect('posts:post_detail', post_id=post_id)
 
 
-login_required
+@login_required
 def follow_index(request):
     user = request.user
-    page_obj = my_own_paginator(Post.objects.filter(author__following__user=request.user), request)
+    page_obj = my_own_paginator(
+        Post.objects.filter(
+            author__following__user=request.user
+        ),
+        request)
     context = {
         'user': user,
         'page_obj': page_obj,
     }
     return render(request, 'posts/follow.html', context)
+
 
 @login_required
 def profile_follow(request, username):

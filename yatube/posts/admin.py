@@ -19,12 +19,14 @@ class GroupAdmin(admin.ModelAdmin):
         'description',
     )
 
+
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         # 'text_comment',
         'text',
     )
+
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Group, GroupAdmin)
