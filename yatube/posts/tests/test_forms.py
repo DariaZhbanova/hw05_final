@@ -1,10 +1,7 @@
 from django.test import TestCase, Client
-from django.contrib.auth import get_user_model
-from ..models import Post, Group
+from ..models import Post, Group, User
 from django.urls import reverse
 from ..forms import PostForm
-
-User = get_user_model()
 
 
 class PostFormTest(TestCase):

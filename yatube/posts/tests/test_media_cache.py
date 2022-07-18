@@ -1,15 +1,14 @@
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from time import sleep
 from django.test import TestCase, Client, override_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
-from ..models import Post, Group
+from ..models import Post, Group, User
 import shutil
 import tempfile
 from django.conf import settings
 from ..forms import PostForm
+from http import HTTPStatus
 
-User = get_user_model()
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
@@ -36,7 +35,7 @@ class MediaCacheTest(TestCase):
         self.authorized_client.force_login(MediaCacheTest.user)
 
     def test_cache(self):
-        """ Проверка работы кэширования главной страницы. """
+        """ Проверка работы кэширования главной страницы."""
         response_first = self.authorized_client.get(reverse('posts:index'))
 
         form_data = {
@@ -51,7 +50,7 @@ class MediaCacheTest(TestCase):
         self.assertRedirects(response, reverse(
             'posts:profile',
             kwargs={'username': f'{ self.user.username }'}))
-        # self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
         sleep(2)
         response_second = self.authorized_client.get(reverse('posts:index'))
@@ -80,7 +79,6 @@ class MediaCacheTest(TestCase):
         form_data = {
             'text': 'Да здравствует новый текст',
             'group': MediaCacheTest.group.pk,
-            # 'pics': uploaded,
             'image': uploaded,
         }
         response = self.authorized_client.post(
@@ -91,13 +89,12 @@ class MediaCacheTest(TestCase):
         self.assertRedirects(response, reverse(
             'posts:profile',
             kwargs={'username': f'{ self.user.username }'}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         new_post_count = Post.objects.count()
         self.assertNotEqual(posts_count, new_post_count)
         self.assertTrue(
             Post.objects.filter(
                 text='Да здравствует новый текст',
-                # pics='media/small.gif',
                 image='posts/small.gif',
             ).exists()
         )

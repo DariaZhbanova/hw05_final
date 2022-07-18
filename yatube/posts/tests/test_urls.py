@@ -1,9 +1,6 @@
 from http import HTTPStatus
-from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from posts.models import Post, Group, User
-
-User = get_user_model()
 
 
 class PostModelTest(TestCase):
@@ -23,7 +20,6 @@ class PostModelTest(TestCase):
 
     def setUp(self):
         self.guest_client = Client()
-        self.user = User.objects.create_user(username='HasNoName')
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 

@@ -1,10 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 from http import HTTPStatus
 from ..models import Comment, User, Post
-
-User = get_user_model()
 
 
 class CommentTest(TestCase):
@@ -40,7 +37,7 @@ class CommentTest(TestCase):
         response_one = self.guest_client.post(
             reverse(
                 'posts:add_comment',
-                kwargs={'post_id': f'{self.post.pk}'}
+                kwargs={'post_id': self.post.pk}
             ),
             data=form_data,
             follow=True
@@ -49,22 +46,22 @@ class CommentTest(TestCase):
             response_one,
             f'/auth/login/?next=/posts/{self.post.pk}/comment/')
         guest_comments_count = Comment.objects.count()
-        self.assertEqual(comments_count, guest_comments_count)  # 0==0
+        self.assertEqual(comments_count, guest_comments_count)
         self.assertEqual(response_one.status_code, HTTPStatus.OK)
 
         response_two = self.authorized_client.post(
             reverse(
                 'posts:add_comment',
-                kwargs={'post_id': f'{self.post.pk}'}
+                kwargs={'post_id': self.post.pk}
             ),
             data=form_data,
             follow=True
         )
         self.assertRedirects(response_two, reverse(
             'posts:post_detail',
-            kwargs={'post_id': f'{ self.post.pk }'}))
+            kwargs={'post_id': self.post.pk}))
         new_comments_count = Comment.objects.count()
-        self.assertNotEqual(comments_count, new_comments_count)  # 0!=1
+        self.assertNotEqual(comments_count, new_comments_count)
 
         last_comment = Comment.objects.last()
         response_three = self.authorized_client.get(reverse(

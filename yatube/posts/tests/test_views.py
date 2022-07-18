@@ -1,10 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 from django import forms
 from ..models import Post, User, Group
-
-User = get_user_model()
 
 
 class PostTests(TestCase):
@@ -27,7 +24,6 @@ class PostTests(TestCase):
         self.assertEqual(post.text, post_b.text)
         self.assertEqual(post.author, post_b.author)
         self.assertEqual(post.group, post_b.group)
-        # self.assertEqual(post.pics, post_b.pics)
         self.assertEqual(post.image, post_b.image)
 
     def assertGroup(self, group, group_b):
@@ -43,7 +39,6 @@ class PostWithGroupAndPictureTests(PostTests):
             author=cls.user,
             text='Текст 1234',
             group=cls.group,
-            # pics='media/m1000x1000.jpg',
             image='posts/m1000x1000.jpg',
         )
 
@@ -58,7 +53,7 @@ class PostWithGroupAndPictureTests(PostTests):
         странице групп"""
         response = self.authorized_client.get(reverse(
             'posts:group_list',
-            kwargs={'slug': f'{ self.group.slug }'}))
+            kwargs={'slug': self.group.slug}))
         first_page_object = response.context['page_obj'][0]
         group_object = response.context['group']
         self.assertGroup(group_object, self.group)
@@ -68,7 +63,7 @@ class PostWithGroupAndPictureTests(PostTests):
         """При создании поста с картинкой и группой он появляется в профиле"""
         response = self.authorized_client.get(reverse(
             'posts:profile',
-            kwargs={'username': f'{ self.user.username }'}))
+            kwargs={'username': self.user.username}))
         first_page_object = response.context['page_obj'][0]
         self.assertPost(first_page_object, self.post)
 
@@ -80,7 +75,6 @@ class PostPagesTests(PostTests):
         cls.post = Post.objects.create(
             author=cls.user,
             text='Текст 1234',
-            # pics='media/m1000x1000.jpg'
             image='posts/m1000x1000.jpg'
         )
 
@@ -101,7 +95,7 @@ class PostPagesTests(PostTests):
         """Шаблон post_edit сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse(
             'posts:post_edit', kwargs={
-                'post_id': f'{ self.post.pk }'}))
+                'post_id': self.post.pk}))
 
         form_fields = {
             'text': forms.fields.CharField,
@@ -196,14 +190,14 @@ class TemplatesTests(TestCase):
         views_vs_templates = {
             reverse('posts:index'): 'posts/index.html',
             reverse('posts:group_list', kwargs={
-                'slug': f'{self.group.slug}'}): 'posts/group_list.html',
+                'slug': self.group.slug}): 'posts/group_list.html',
             reverse('posts:profile', kwargs={
-                'username': f'{self.user.username}'}): 'posts/profile.html',
+                'username': self.user.username}): 'posts/profile.html',
             reverse('posts:post_detail', kwargs={
-                'post_id': f'{self.post.pk}'}): 'posts/post_detail.html',
+                'post_id': self.post.pk}): 'posts/post_detail.html',
             reverse('posts:post_create'): 'posts/post_create.html',
             reverse('posts:post_edit', kwargs={
-                'post_id': f'{self.post.pk}'}): 'posts/post_create.html'
+                'post_id': self.post.pk}): 'posts/post_create.html'
         }
         for reverse_name, template in views_vs_templates.items():
             with self.subTest(reverse_name=reverse_name):

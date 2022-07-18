@@ -23,7 +23,6 @@ class GroupAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
-        # 'text_comment',
         'text',
     )
 

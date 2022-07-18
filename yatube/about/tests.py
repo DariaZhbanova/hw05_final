@@ -1,8 +1,7 @@
 from django.test import TestCase, Client
+from http import HTTPStatus
 
 
-# Дополнительное задание 2.
-# Проверяем urls для about
 class StaticUrlTests(TestCase):
     def setUp(self):
         self.guest_client = Client()
@@ -11,4 +10,4 @@ class StaticUrlTests(TestCase):
         urls = ['/about/author/', '/about/tech/']
         for url in urls:
             response = self.guest_client.get(url)
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, HTTPStatus.OK)

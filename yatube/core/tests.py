@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from http import HTTPStatus
 
 
 class ViewTestClass(TestCase):
@@ -7,7 +8,7 @@ class ViewTestClass(TestCase):
 
     def test_error_page(self):
         response = self.client.get('/nonexist-page/')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_error_template(self):
         response = self.client.get('/nonexist-page/')

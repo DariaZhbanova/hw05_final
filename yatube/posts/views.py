@@ -1,4 +1,3 @@
-# from django.views.decorators.cache import cache_page
 import datetime
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -18,7 +17,6 @@ def my_own_paginator(queryset, request):
     return page_obj
 
 
-# @cache_page(20)
 def index(request):
     page_obj = my_own_paginator(Post.objects.all(), request)
     now = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
@@ -108,13 +106,12 @@ def post_edit(request, post_id):
 @login_required
 def add_comment(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST or None)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = request.user
-            comment.post = post
-            comment.save()
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.post = post
+        comment.save()
     return redirect('posts:post_detail', post_id=post_id)
 
 
@@ -135,7 +132,7 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     user = request.user
     if author != user:
         Follow.objects.get_or_create(user=user, author=author)
@@ -144,7 +141,7 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     user = request.user
-    Follow.objects.get(user=user, author=author).delete()
+    get_object_or_404(Follow, user=user, author=author).delete()
     return render(request, 'posts/follow.html')
